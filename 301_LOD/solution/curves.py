@@ -515,8 +515,26 @@ def adaptively_sample_curve(interval: tuple[float, float], epsilon: float) -> np
 	return new_curve
 
 
+def integrate(curve: np.ndarray) -> float:
+    '''
+    Approximate the integral of the electric field along a curve using the trapezoidal rule.
 
-def adaptive_integration(epsilon: float=0.01) -> tuple[list[np.ndarray], list[np.ndarray]]:
+    Args:
+    	curve: Curve the electric field is interated over.
+
+    Returns:
+    	Estimate of the integral.
+    '''
+    estimate = 0.
+    n_samples = len(curve)
+    for i in range(n_samples-1):
+        gamma_0 = np.reshape(curve[i,:], (1,-1))
+        gamma_1 = np.reshape(curve[i+1,:], (1,-1))
+        gamma_vector = gamma_1 - gamma_0
+        estimate += np.dot(gamma_vector.flatten(), 0.5 * (electric_field(gamma_0) + electric_field(gamma_1)).flatten())
+    return estimate
+
+def adaptive_integration(epsilon: float=0.01) -> tuple[np.ndarray, np.ndarray]:
 	'''
 	Adaptively integrate the electric field E(x,y) = (e^{-r^2}, sin(x)) along the curve γ(t) = (2πt - π, sin(2πt)).
 	There are many ways you might approach this problem... this is just one approach that maybe kind of sensible 
@@ -534,26 +552,16 @@ def adaptive_integration(epsilon: float=0.01) -> tuple[list[np.ndarray], list[np
 	n_smooth_samples = 256
 	t = np.linspace(0., 1., n_smooth_samples)
 	smooth_curve = np.transpose(np.vstack((2.*np.pi*t - np.pi, np.sin(2.*np.pi*t))))
-	smooth_estimate = 0.
-	for i in range(n_smooth_samples-1):
-		gamma_0 = np.reshape(smooth_curve[i,:], (1,-1))
-		gamma_1 = np.reshape(smooth_curve[i+1,:], (1,-1))
-		gamma_vector = gamma_1 - gamma_0
-		smooth_estimate += np.dot(gamma_vector.flatten(),  0.5*(electric_field(gamma_0) + electric_field(gamma_1)).flatten())
+	smooth_estimate = integrate(smooth_curve)
 
 	# TODO: sample curve!
 	samples = adaptively_sample_curve((0., 1.), epsilon)
 	samples = np.array(samples)
 	sampled_curve = np.transpose(np.vstack((2.*np.pi*samples - np.pi, np.sin(2.*np.pi*samples)))) # get positions
 
-	estimate = 0.
-	n_samples = len(sampled_curve)
-	for i in range(n_samples-1):
-		gamma_0 = np.reshape(sampled_curve[i,:], (1,-1))
-		gamma_1 = np.reshape(sampled_curve[i+1,:], (1,-1))
-		gamma_vector = gamma_1 - gamma_0
-		estimate += np.dot(gamma_vector.flatten(),  0.5*(electric_field(gamma_0) + electric_field(gamma_1)).flatten())
+	estimate = integrate(sampled_curve)
 
+	n_samples = len(sampled_curve)
 	print(f"True integral value (approximate): {smooth_estimate}")
 	print(f"Numerical approximation: {estimate}")
 	print(f"Integration error (relative): {(estimate-smooth_estimate)/smooth_estimate}")

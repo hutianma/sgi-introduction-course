@@ -1,6 +1,6 @@
 # An introduction to level of detail
 
-Welcome! Here are the exercises that accompany the lecture presented this morning about level of detail (LOD). In case you missed the lecture, here are the [slides](). Don't hesitate to ask questions!
+Welcome! Here are the exercises that accompany the lecture presented this morning about level of detail (LOD). In case you missed the lecture, here are the [slides](media/IntroToLOD.pdf). Don't hesitate to ask questions!
 
 ![teaser](media/Teaser.png)
 
@@ -67,7 +67,7 @@ This algorithm for curve simplification sometimes goes by the name _Ramer-Dougla
 
 Use your answer to implement the function `point_to_line_segment_distance` in `src/curves.py`.
 
-**Exercise:** Implement the RDP algorithm by implmenting the recursive function `rdp_simplify_curve` in `src/curves.py`. Try out your algorithm on `../data/open-curve_*.l` to make sure your implementation works as expected. 
+**Exercise:** Implement the RDP algorithm by implementing the recursive function `rdp_simplify_curve` in `src/curves.py`. Try out your algorithm on `../data/open-curve_*.l` to make sure your implementation works as expected. 
 
 Now try your algorithm on the other curve examples. Are there any examples for which your algorithm works better or worse? If so, why do you think that is?
 
@@ -129,10 +129,10 @@ Show that using homogeneous coordinates, the quadric error w.r.t. a set of plane
 
 This result is nice because it means we can store a single $(d+1)\times(d+1)$ quadric error matrix at each vertex. 
 
-We now have all the ingredients to implement the quadric error simplification algorith, which proceeds as follows:
+We now have all the ingredients to implement the quadric error simplification algorithm, which proceeds as follows:
 * Compute the $(d+1)\times (d+1)$ quadric error matrix $\mathbf{K}_i$ for each vertex $i$.
 * Until the target number of vertices is reached:
-	* Find the edge $ij$ with the smallest cost of collapsing to its optimal point $x$. Collapse $ij$ to $x$.
+	* Find the edge $ij$ with the smallest cost of collapsing to its optimal point $x$, which involves solving $\min_{\mathbf{x}} Q_i(\mathbf{x}) + Q_j(\mathbf{x})$. Typically, each squared point-to-plane distance is also weighted by the length/area of the edge/face. Collapse $ij$ to $x$.
 	* Assign the quadric at the new vertex (with location $x$) to $\mathbf{K} = \mathbf{K}_i + \mathbf{K}_j$.
 	* Update the cost of each edge touching the new vertex.
 
@@ -212,7 +212,7 @@ Test your implementation by trying the quadric error simplification on `../data/
 
 ## Adaptive integration
 
-This exercise is a simple demonstration of the concept of level of detail beyond purely geometric fidelity. In particular, we will explore adaptive (numerical) integration! Integrating various physical quantities over different objects is very common in the simulation of physical systems, and evaluating the integral exactly is not easy for arbitrary geometry.
+This exercise is a simple demonstration of the concept of level of detail beyond purely geometric fidelity. In particular, we will explore adaptive numerical integration! Integrating various physical quantities over different objects is very common in the simulation of physical systems, and evaluating the integral exactly is not easy for arbitrary geometry.
 
 In this problem, we consider the 1D line integral over a curve $\gamma: [0,1]\to \mathbb{R}^2$
 
@@ -274,5 +274,6 @@ Based on the foundations you've developed in these exercises, you can think abou
 
 # References and further reading
 * Eiter & Mannila 1994, _Computing Discrete Fréchet Distance_
-* Garland & Heckbert 1997, _Surface Simplification Using Quadric Error Metrics_. And beyond triangle meshes, the ideas behind quadric error simplification has been extended to quad meshes, point clouds, and more! 
+* Garland & Heckbert 1997, _Surface Simplification Using Quadric Error Metrics_. And beyond triangle meshes, the ideas behind quadric error simplification has been extended to quad meshes, point clouds, and more.
 * Hoppe 1996, _Progressive Meshes_
+* Luebke et al. 2003, _Level of Detail for 3D Graphics_
