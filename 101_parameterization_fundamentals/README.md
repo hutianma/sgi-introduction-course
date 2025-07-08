@@ -39,7 +39,7 @@ To write this in matrix form, we need to define our sparse matrix "Laplacian".
 $$\mathbf{L}\_{ij} =
     \begin{cases}
     -w\_{ij} & i \neq j \text{ and } \exists \{i,j\} \in \mathbf{E} \\
-    -\sum\_{l\neq i} L\_{il} & i = j \\
+    \sum\_{l\neq i} w\_{il} & i = j \\
     0 & \text{otherwise}
     \end{cases}
 $$
