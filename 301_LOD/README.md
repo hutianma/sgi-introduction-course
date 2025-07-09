@@ -14,13 +14,13 @@ You may be prompted to install required libraries, like `numpy` or `polyscope`. 
 ```
 pip install [package-name]
 ```
-If you have any difficulty at all, reach out immediately and we would be happy to help!
+If you have any difficulty at all, reach out immediately and we would be happy to help.
 
 If you get stuck on any exercise, either try to skip ahead to exercises that you can do without needing the answer to the exercise you're stuck on, or wait until we go over the solutions together.
 
 If you are able to execute the program succesfully, a GUI should appear. At first, clicking in the buttons in the menu will do nothing. But they will do something interesting once you've completed the exercises below -- keep reading to find out...
 
-**Some advice:** Don't worry about writing the most optimized code: get it right, then optimize later if needed!
+**Some advice:** Don't worry about writing the most optimized code: get it right, then optimize later if needed.
 
 Table of contents:
 - [Ramer-Douglas-Peucker curve simplification](#ramer-douglas-peucker-curve-simplification)
@@ -37,7 +37,7 @@ Curvature is an important quantity to consider for geometric simplification: in 
 So a reasonable approach to simplifying curves is to preserve the curvature of the original curve somehow. Clearly, if we're going to change the curve, we can't always preserve the curvature at every point along the curve. Naturally, this leads us to ask at which points is curvature worth preserving, and at which points it might not be so important. Intuitively, we might feel that we should preserve the "larger" curvatures more than the smaller ones. But there might be points at which the curvature is high, as defined by the second derivative of the curve's unit-speed parameterization, but actually represent a relatively small "bump" of the curve taken as a whole.
 
 <p align="center">
-<img src="media/CurveCurvatures.png" width=40% height=40%>
+<img src="media/CurveCurvatures.png" width=40%>
 </p>
 
 Somehow we want to preserve prominent "features" of the curve, which correspond to points of large curvature, but also take into account the scale of the curve itself. One way we might do that is to imagine simplifying the curve all the way down to a straight line segment, and asking ourselves, "What is the single most important point that contributes most to the curve's shape?" A reasonable answer is the one that is furthest away from the line segment, because this characterizes the most deviation the curve has from a straight line.
@@ -62,7 +62,7 @@ This algorithm for curve simplification sometimes goes by the name _Ramer-Dougla
 **Exercise:** Given a point $\mathbf{x}\in \mathbb{R}^2$, derive an expression for the distance between $\mathbf{x}$ and its closest point on the line segment defined by endpoints $\mathbf{v}_1, \mathbf{v}_2\in\mathbb{R}^2$.
 
 <p align="center">
-<img src="media/SegmentDistance.png" width=40% height=40%>
+<img src="media/SegmentDistance.png" width=40%>
 </p>
 
 Use your answer to implement the function `point_to_line_segment_distance` in `src/curves.py`.
@@ -80,7 +80,7 @@ In the RDP simplification algorithm, we chose points in the curve to preserve, w
 The _quadric error metric_ $Q: \mathbb{R}^d\to \mathbb{R}$ measures the distance from a point $\mathbf{x}\in\mathbb{R}^d$ to a set of $(d-1)$-dimensional hyperplanes. (When $d=2$, that means we measure the distance to a set of 1D lines.) Convince yourself that the distance from $\mathbf{x}$ to a plane with unit normal $\mathbf{n}$ is $\langle\mathbf{n}, \mathbf{x}-\mathbf{p}\rangle$, where $\mathbf{p}$ is any point on the plane:
 
 <p align="center">
-<img src="media/LineDistance.png" width=40% height=40%>
+<img src="media/LineDistance.png" width=40%>
 </p>
 
 The quadric error of a point $\mathbf{x}$ with respect to a set of $k$ planes is then the sum of squared distances $Q(\mathbf{x}) = \sum_{i=1}^k \langle\mathbf{n}_i, \mathbf{x} - \mathbf{p}_i\rangle^2$. (Note that because we are measuring _squared_ distances, we could actually use either the positive _or_ negative normal of a hyperplane.)
@@ -88,7 +88,7 @@ The quadric error of a point $\mathbf{x}$ with respect to a set of $k$ planes is
 **Exercise:** Given a line (or line segment) in $\mathbb{R}^2$ with tangent direction $\mathbf{t}\in\mathbb{R}^2$, what is an expression for the unit normal vector $\mathbf{n}$ to the line? In $\mathbb{R}^2$, the unit normal is usually defined as the 90-degree clockwise rotation of the tangent direction. What about if we wanted to rotate 90 degrees in the counter-clockwise direction?
 
 <p align="center">
-<img src="media/LineNormal.png" width=40% height=40%>
+<img src="media/LineNormal.png" width=40%>
 </p>
 
 **Exercise:** Write $Q(\mathbf{x})$ in matrix form $Q(\mathbf{x}) = \mathbf{x}^T\mathbf{A}\mathbf{x} + \mathbf{b}^T\mathbf{x} + c$ for some $d\times d$ matrix $\mathbf{A}$, $d$-dimensional vector $\mathbf{b}$, and scalar value $c\in\mathbb{R}$.
@@ -185,13 +185,13 @@ The quadric error simplification algorithm you derived for curves ($d = 2$) gene
 * For each vertex quadric, we weight the contribution of each face by its face area.
 
 <p align="center">
-<img src="media/SurfaceEdgeCollapse.png" width=60% height=60%>
+<img src="media/SurfaceEdgeCollapse.png" width=60%>
 </p>
 
 **Exercise:** Given a triangle in $\mathbb{R}^3$ defined by vertex positions $\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3 \in \mathbb{R}^3$ given in counter-clockwise order, what is an expression for the "outward-pointing" unit normal vector $\mathbf{n}$ to the triangle? Assume the outward-pointing normal direction is defined by the right-hand rule for the oriented triangle.
 
 <p align="center">
-<img src="media/TriangleNormal.png" width=40% height=40%>
+<img src="media/TriangleNormal.png" width=40%>
 </p>
 
 **Exercise:** If you want compute the _area-weighted_ normal to a triangle face -- that is, the unit normal vector to the face, multiplied by the face's area -- how can you change your answer to the previous question to do so?
