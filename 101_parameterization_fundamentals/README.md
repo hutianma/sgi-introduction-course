@@ -22,6 +22,7 @@ Below is the mathematical construction for the matrices that you will be buildin
 ### Solving the spring system
 
 We start with the spring energy minimization problem.
+
 $$E = \min\_{\mathbf{U}} \sum\_{\{i,j\} \in \mathbf{E}} w\_{ij} ||\mathbf{u}\_i - \mathbf{u}\_j||^2$$
 
 The energy is convex, which means we can find the global minimum by setting the derivative to zero. $N\_i$ refers to all the neighbors of vertex $i$ (all vertices which share an edge with $i$).
@@ -29,9 +30,11 @@ The energy is convex, which means we can find the global minimum by setting the 
 $$\frac{\partial E}{\partial \mathbf{u}\_i} = \sum\_{j \in N\_i} 2 * w\_{ij}(\mathbf{u}\_i - \mathbf{u}\_j) = 0$$
 
 Let $B\_i \subset N\_i$ be the set of all the boundary vertices which are neighbors of $i$ (can be empty). We can now split up the sum between neighbors which are boundary vertices and those which are not.
+
 $$\sum\_{j \in N\_i} w\_{ij}\mathbf{u}\_i - \sum\_{j \in N\_i/B\_i} w\_{ij}\mathbf{u}\_j - \sum\_{j \in B\_i} w\_{ij}\mathbf{u}\_j = 0$$
 
 Moving the sum over the boundary vertiecs to the right-hand side, we now have all the $\mathbf{u}\_j$ we need to solve for on the left, and the fixed variables (boundary vertices) on the right.
+
 $$\sum\_{j \in N\_i} w\_{ij}\mathbf{u}\_i - \sum\_{j \in N\_i/B\_i} w\_{ij}\mathbf{u}\_j = \sum\_{j \in B\_i} w\_{ij}\mathbf{u}\_j$$
 
 To write this in matrix form, we need to define our sparse matrix "Laplacian".
