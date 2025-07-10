@@ -3,11 +3,11 @@ import torchvision
 import random
 import os
 import numpy as np
-from src.render import Renderer
-from src.mesh import Mesh, compute_uv_map
-from src.get_target_renders import get_target_renders
-from src.utils import get_texels, load_texture_image
-from src.optimize_texture import optimize_texture
+from common.render import Renderer
+from common.mesh import Mesh, compute_uv_map
+from common.get_target_renders import get_target_renders
+from common.utils import get_texels, load_texture_image
+from common.optimize_texture import optimize_texture
 from solution.inverse_map import inverse_map
 
 
@@ -62,7 +62,7 @@ target_texture_image = load_texture_image(TEXTURE_IMAGE_PATH, renderer.device)
 # UV parameterization for the target images
 # If no UVs are provided, we can use the same ones we computed for our optimization
 if TARGET_UVS == "load":
-    from src.utils import load_uvs
+    from common.utils import load_uvs
     print(MESH_PATH, "MESH_PATH")
     target_uvs, _ = load_uvs(MESH_PATH)
     target_uvs = target_uvs.to(DEVICE)
@@ -71,7 +71,7 @@ else:
 
 # Optionally, we can visualze the UV parameterization like we did in module 104
 if VIZ_UVS:
-    from src.utils import plot_uvs
+    from common.utils import plot_uvs
     from PIL import Image
     test_texture_image = Image.open("data/uv_grid.png")
     # normalize the texture map values to be between 0 and 1

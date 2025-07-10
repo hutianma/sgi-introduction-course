@@ -1,14 +1,31 @@
 import polyscope as ps
 import numpy as np
 from PIL import Image
-from src.mesh import Mesh
-from src.utils import plot_uvs, compute_distortion
+from common.mesh import Mesh
+from common.utils import plot_uvs, compute_distortion
 from exercise.triangle_soup_parameterization import triangle_soup_parameterization
 
 if __name__ == "__main__":
     ps.init()
+
+    # Load in the mesh and texture map
     mesh = Mesh("data/cube.obj", torch=True)
+    texture_map = Image.open("data/uv_grid.png")
+    # normalize the texture map values to be between 0 and 1
+    texture_map = np.asarray(texture_map)[:, :, :3] / 255
+    
+    # Compute the parameterization of the mesh
     vt, ft = triangle_soup_parameterization(mesh)
+
+    # Visualize the parameterization in 2D (useful for debugging)
+    plot_uvs(
+        "exercise/soup_param.png",
+        vt,
+        ft,
+        texture_map,
+        "UV Parameterization Visualization",
+        linewidth=2
+    )
 
     # Test the distortion of our parameterization
     # compute_distortion() returns the singular values of the jacobian of the
@@ -39,20 +56,7 @@ if __name__ == "__main__":
         defined_on='corners',
         enabled=True
     )
-
-    # Add the texture map
-    texture_map = Image.open("data/uv_grid.png")
-    # normalize the texture map values to be between 0 and 1
-    texture_map = np.asarray(texture_map)[:, :, :3] / 255
     ps_mesh.add_color_quantity("texture", texture_map, 
                             defined_on='texture', param_name="soup_param", 
                             enabled=True)
-    plot_uvs(
-        "exercise/soup_param.png",
-        vt,
-        ft,
-        texture_map,
-        "UV Parameterization Visualization",
-        linewidth=2
-    )
     ps.show()

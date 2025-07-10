@@ -1,5 +1,5 @@
 import torch
-from src.trivial_parameterization import trivial_parameterization
+from common.utils import trivial_parameterization
 from .pack_triangles import pack_triangles
 
 def triangle_soup_parameterization(mesh):

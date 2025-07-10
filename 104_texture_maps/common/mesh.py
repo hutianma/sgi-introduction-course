@@ -10,6 +10,7 @@ class Mesh:
         faces = []
         normals = []
         vt = []
+        ft = []
         uv = []
         with open(path, "r") as f:
             content = f.readlines()
@@ -45,8 +46,11 @@ class Mesh:
                         if "//" in elems[1]:
                             pass
                         elif "/" in elems[1]:
+                            vert_inidices = []
                             for vert in elems[1:]:
                                 uv.append(vt[int(vert.split("/")[1]) - 1])
+                                vert_inidices.append(int(vert.split("/")[1]) - 1)
+                            ft.append(vert_inidices)
 
         if torch:
             import torch
@@ -55,6 +59,7 @@ class Mesh:
             self.colors = torch.tensor(colors)
             self.normals = torch.tensor(normals)
             self.vt = torch.tensor(vt)
+            self.ft = torch.tensor(ft).long()
             self.uv = torch.tensor(uv)
         else:
             self.vertices = np.array(vertices)
@@ -62,4 +67,5 @@ class Mesh:
             self.colors = np.array(colors)
             self.normals = np.array(normals)
             self.vt = np.array(vt)
+            self.ft = np.array(ft)
             self.uv = np.array(uv)

@@ -1,28 +1,32 @@
 # PyTorch Basics
 
-In this module, we will learn how to use basic PyTorch commands to perform an optimization. There are no exercises to complete for this module, but it is suggested that you follow along in the command line and in the file pytorch_demo.py
+In this module, we will learn how to use basic PyTorch commands to perform an optimization. There are no exercises to complete for this part, but it is suggested that you follow along in the command line and in the file pytorch_demo.py. If you are already familiar with PyTorch you may skip / skim this module, but make sure to still follow the instructions for installing PyTorch.
 
 ## PyTorch Overview
-PyTorch is a python library for built for optimization. PyTorch is very similar to NumPy. In fact, most PyTorch functions have the same name as their NumPy counterparts. The main difference is that PyTorch supports [automatic differentiation](https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html). PyTorch builds a computation graph to keep track of all operations that you run. Then, if you want to compute the gradient of some value with respect to your parameters, you can call the `backwards()` method on that value and PyTorch will automatically differentiate through the graph of operations to give you the desired gradient. This allows us to easily perform gradient descent to optimize parameters. It is especially helpful when we have complex parametric representations which would otherwise require tedious manual calcutions of derivatives.
+PyTorch is a python library for built for optimization. PyTorch is very similar to NumPy. In fact, most PyTorch functions have the same name as their NumPy counterparts. The main difference is that PyTorch supports [automatic differentiation](https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html). PyTorch builds a computation graph to keep track of all operations that you run. Then, if you want to compute the gradient of some value with respect to your parameters, you can call the `backward()` method on that value and PyTorch will automatically differentiate through the graph of operations to give you the desired gradient. This allows us to easily perform gradient descent to optimize parameters. It is especially helpful when we have complex parametric representations which would otherwise require tedious manual calcution of derivatives.
 
 
 ## Installing Pytorch
-To install pytorch, first confirm we have our geometry processing environment activated. If not, run the following command to activate it.
-```
+To install PyTorch, first confirm we have our geometry processing environment activated. If not, run the following command to activate it.
+```console
 source gp/bin/activate
 ```
 Now we want to install the PyTorch library. Follow the instructions for your specific operating system below.
 
-```
+```console
 # Mac
 pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1
 
 # Linux and Windows
 pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cpu
 ```
-Now that PyTorch is installed, let's try to import the library. Boot up Python (by running `python` in the terminal) and try to import PyTorch.
+Now that PyTorch is installed, let's try to import the library. Boot up Python
+```console
+python
 ```
->>> import torch
+and try to import PyTorch.
+```
+>>>import torch
 ```
 Now confirm that the import worked by checking PyTorch's version.
 ```
@@ -34,7 +38,7 @@ Now confirm that the import worked by checking PyTorch's version.
 Before we start coding in PyTorch, let's go over a few of the minor differences between NumPy and PyTorch notation.
 - PyTorch works with "Tensors" instead of "Arrays" but conceptually these two structures are the same. So anywhere you would write `np.array()` switch it to `torch.tensor()` when using PyTorch.
 - Instead of using `axis` like NumPy does to specify which dimension to perform the operation on, PyTorch uses the `dim` keyword, however, the functionality is essentially the same. One slight difference is that certain pytorch functions (for example `torch.cross`) have different default values for the `dim` argument than NumPy equivalents have for the `axis` argument so it is helpful to explicitly specify the `dim` argument if you are ever unsure.
-- If you are ever unsure, a quick google search for "PyTorch equivalent of <some_numpy_function>" can be quite helpful.
+- If you are ever in doubt, a quick google search for "PyTorch equivalent of <some_numpy_function>" can be quite helpful.
 
 ## PyTorch Demo
 We will now go through a short demo to see how we can use PyTorch to optimize a parameter. You can follow along by running these commands in your own python file. All code for this demo is also contained in [pytorch_demo.py](pytorch_demo.py).

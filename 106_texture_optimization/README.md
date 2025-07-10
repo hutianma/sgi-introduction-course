@@ -1,6 +1,6 @@
 # Texture Optimization
 
-[writeup / notes](105_texture_optimization.md)
+[writeup / notes](106_texture_optimization.md)
 
 [exercises](exercise)
 
