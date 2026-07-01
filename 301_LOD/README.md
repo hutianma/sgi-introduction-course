@@ -16,11 +16,11 @@ pip install [package-name]
 ```
 If you have any difficulty at all, reach out immediately and we would be happy to help.
 
-If you get stuck on any exercise, either try to skip ahead to exercises that you can do without needing the answer to the exercise you're stuck on, or wait until we go over the solutions together.
+If you get stuck on any exercise for a while, that means it's probably a good idea to ask a question! In the meantime, you can also try to skip ahead to exercises that you can do without needing the answer to the exercise you're stuck on. We'll also go over the solutions together.
 
 If you are able to execute the program succesfully, a GUI should appear. At first, clicking in the buttons in the menu will do nothing. But they will do something interesting once you've completed the exercises below -- keep reading to find out...
 
-**Some advice:** Don't worry about writing the most optimized code: get it right, then optimize later if needed.
+**Some advice:** Don't worry about writing the most optimized code. First get it right, and you can always optimize later if needed.
 
 Table of contents:
 - [Ramer-Douglas-Peucker curve simplification](#ramer-douglas-peucker-curve-simplification)
@@ -271,6 +271,7 @@ mass-spring system? -->
 Based on the foundations you've developed in these exercises, you can think about how you might address the following challenges:
 * Other types of "detail" include view-dependent effects, or perceptual impact. We didn't really discuss the latter, but these effects can be very important depending on the application. In fact, historically the term "level of detail" specifically refers to the view-dependent methods used in rendering. How might you take view dependence into account?
 * So far we've only considered "discrete" level of detail: we simplified curves or meshes into several simplified stages, but simply swapping out one LOD for another often leads to abrupt visual changes known as popping" artifacts. How would you implement continuous LOD that achieves smooth interpolation between different LODs?
+* Sometimes it can pay off to use _multiple_ LODs for a single object. Under what circumstances would you expect this strategy to be most worth the extra overhead? How would you deal with the cracks and gaps that appear where multiple LODs fail to join smoothly?
 
 # References and further reading
 * Eiter & Mannila 1994, _Computing Discrete Fréchet Distance_
