@@ -161,7 +161,7 @@ mat is a 3 x 3 matrix.
 
 The identity matrix of dimension `d` is constructed using `np.eye(d)`.
 ```python
->>> mat = np.eye(4)
+>>> mat = np.eye(3)
 >>> print(mat)
 [[1. 0. 0.]
  [0. 1. 0.]
