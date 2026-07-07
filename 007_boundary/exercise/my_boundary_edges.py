@@ -15,7 +15,5 @@ def my_boundary_edges(F):
     """
 
 
-    
-
     return None
     
