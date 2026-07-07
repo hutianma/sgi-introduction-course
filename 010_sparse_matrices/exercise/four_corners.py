@@ -4,9 +4,9 @@ def four_corners(m,n):
     four corners.
     """
 
-    i = ?
-    j = ?
-    k = ?
+    i = np.array([0, 0, m-1, m-1])
+    j = np.array([0, n-1, 0, n-1])
+    k = np.array([1, 1, 1, 1])
     A = sp.sparse.csr_matrix((k,(i,j)), shape=(m,n))
 
     return A

@@ -4,6 +4,6 @@ def flipped_normals(V,F):
     """
     Compute the flipped per-face normals of a triangle mesh.
     """
-
-    return None
+    N = gpy.face_normals(V,F)
+    return -N
 
