@@ -3,7 +3,13 @@ import scipy as sp
 import copy
 import typing
 from queue import PriorityQueue
+
+import sys
+import subprocess
+subprocess.check_call([sys.executable, "-m", "pip", "install", "matplotlib"])
+
 import matplotlib.pyplot as plt
+
 
 def size(curves: list[list[np.ndarray]]) -> int:
 	'''
@@ -26,7 +32,22 @@ def point_to_line_segment_distance(point: np.ndarray, tail: np.ndarray, tip: np.
 	Returns:
 		The Euclidean distance of `point` to the line segment defined by the endpoint positions `tail` and `tip`.
 	'''
-	return 0. # TODO
+	segement = tip - tail
+	point_vector = point - tail
+
+	length2 = np.dot(segement, segement)
+
+	if length2 == 0.:
+		return np.linalg.norm(point_vector)
+
+	t = np.dot(point_vector, segement) / length2
+
+	if t < 0.:
+		return np.linalg.norm(point_vector)
+	if t > 1.:
+		return np.linalg.norm(point - tip)
+	
+	return np.linalg.norm(point_vector - t * segement)
 
 def rdp_simplify_curve(curve: list[np.ndarray], epsilon: float) -> list[np.ndarray]:
 	'''
@@ -39,8 +60,29 @@ def rdp_simplify_curve(curve: list[np.ndarray], epsilon: float) -> list[np.ndarr
 	Returns:
 		 new_curve: a list of 2D point positions for the simplified curve
 	'''
+	if len(curve) < 3:
+		return curve
+	tail = curve[0]
+	tip = curve[-1]
 
-	return curve # TODO
+	max_distance = 0.
+	max_index = 0
+
+	for i in range(1, len(curve) - 1):
+		point = curve[i]
+		distance = point_to_line_segment_distance(point, tail, tip)
+
+		if distance > max_distance:
+			max_distance = distance
+			max_index = i
+
+		if max_distance < epsilon:
+			return [tail, tip]
+
+	curve1 = rdp_simplify_curve(curve[1:max_index+1], epsilon)
+	curve2 = rdp_simplify_curve(curve[max_index:], epsilon)
+
+	return curve1[:1] + curve2
 
 def rdp_simplify_curves(curves: list[list[np.ndarray]], epsilon: float=0.02) -> list[list[np.ndarray]]:
 	'''
@@ -61,6 +103,50 @@ def rdp_simplify_curves(curves: list[list[np.ndarray]], epsilon: float=0.02) -> 
 
 	return new_curves
 
+
+import numpy as np
+
+curve = [
+    np.array([0.0, 0.0]),
+    np.array([1.0, 0.05]),
+    np.array([2.0, 0.0]),
+    np.array([3.0, 1.0]),
+    np.array([4.0, 0.0]),
+    np.array([5.0, 0.02]),
+]
+
+
+new_curves = rdp_simplify_curves([curve], epsilon=0.2)
+
+print("original number of points:", size([curve]))
+print("simplified number of points:", size(new_curves))
+print("simplified curve:")
+for p in new_curves[0]:
+    print(p)
+
+def plot_curves(curves, title="curves"):
+    plt.figure(figsize=(6, 6))
+
+    for curve in curves:
+        P = np.array(curve)
+        plt.plot(P[:, 0], P[:, 1], marker="o")
+
+    plt.axis("equal")
+    plt.title(title)
+    plt.show()
+
+plot_curves([curve], "Original curve")
+plot_curves(new_curves, "RDP simplified curve")
+
+for eps in [0.01, 0.05, 0.2, 0.8]:
+    new_curves = rdp_simplify_curves([curve], epsilon=eps)
+
+    print("epsilon =", eps)
+    print("original size:", size([curve]))
+    print("simplified size:", size(new_curves))
+
+    plot_curves(new_curves, f"RDP epsilon={eps}")
+
 # =================================== QES =================================== #
 
 def all_quadrics(curves: list[list[np.ndarray]]) -> list[np.ndarray]:
@@ -78,9 +164,22 @@ def all_quadrics(curves: list[list[np.ndarray]]) -> list[np.ndarray]:
 	for i in range(len(curves)):
 		# iterate over interior points
 		for j in range(1, len(curves[i])-1):
-			pass # TODO
+			e_l = curves[i][j] - curves[i][j-1]
+			e_r = curves[i][j+1] - curves[i][j]
+
+			n_l = np.array([-e_l[1], e_l[0]]) / np.linalg.norm(e_l) # left normal
+			n_r = np.array([-e_r[1], e_r[0]]) / np.linalg.norm(e_r) # right normal
+
+			d_l = -np.dot(n_l, curves[i][j-1])
+			d_r = -np.dot(n_r, curves[i][j+1])
+
+			line_l = np.array([[n_l[0]], [n_l[1]], [d_l]])
+			line_r = np.array([[n_r[0]], [n_r[1]], [d_r]])
+
+			quadrics[i][j] = np.outer(line_l, line_l) + np.outer(line_r, line_r)
 
 	return quadrics
+
 
 def collapse_cost(v: np.ndarray, Q: np.ndarray) -> float:
 	'''
@@ -95,7 +194,8 @@ def collapse_cost(v: np.ndarray, Q: np.ndarray) -> float:
 
 	Warning: Matrix multiplication between NumPy matrices/vectors is done via the `@` symbol!
 	'''
-	return 0. # TODO
+	v_h = np.array([v[0], v[1], 1.0])
+	return v_h.T @ Q @ v_h
 
 def optimal_collapse_location(Q1: np.ndarray, Q2: np.ndarray, v1: np.ndarray, v2: np.ndarray) -> np.ndarray:
 	'''
@@ -115,7 +215,10 @@ def quadric_error_simplify_curves(curves: list[list[np.ndarray]], target_vertice
 	Applies a 1D version of the quadric error simplification algorithm for simplifying curves.
 
 	Args:
-		curves: list of lists, where each sublist is a sequence of 2D positions representing a connected curve component; 2D point positions are represented as NumPy arrays of size (2,), and edge is defined between each pair of consecutive vertices in each sublist. target_vertices: integer giving a lower bound for the number of vertices
+		curves: list of lists, where each sublist is a sequence of 2D positions representing a connected curve component; 
+		2D point positions are represented as NumPy arrays of size (2,), 
+		and edge is defined between each pair of consecutive vertices in each sublist. 
+		target_vertices: integer giving a lower bound for the number of vertices
 
 	Returns:
 		new_curves: list of lists, where each sublist is a sequence of 2D positions representing a connected curve 

@@ -33,7 +33,7 @@ def point_to_line_segment_distance(point: np.ndarray, tail: np.ndarray, tip: np.
 		return np.sqrt(np.dot(u,u))
 
 	# Vector from `point` to the closest point on the segment.
-	d = u - seg * np.clip(np.dot(u, seg) / length2, 0.0, 1.0);
+	d = u - seg * np.clip(np.dot(u, seg) / length2, 0.0, 1.0)
 	return np.sqrt(np.dot(d,d))
 
 def rdp_simplify_curve(curve: list[np.ndarray], epsilon: float) -> list[np.ndarray]:
