@@ -104,48 +104,10 @@ def rdp_simplify_curves(curves: list[list[np.ndarray]], epsilon: float=0.02) -> 
 	return new_curves
 
 
-import numpy as np
+# conda activate sgi-lod
+# cd /Users/huyufan/Documents/GitHub/sgi-introduction-course/301_LOD/exercise
+# python lod.py --i ../data/open-curve_0.l
 
-curve = [
-    np.array([0.0, 0.0]),
-    np.array([1.0, 0.05]),
-    np.array([2.0, 0.0]),
-    np.array([3.0, 1.0]),
-    np.array([4.0, 0.0]),
-    np.array([5.0, 0.02]),
-]
-
-
-new_curves = rdp_simplify_curves([curve], epsilon=0.2)
-
-print("original number of points:", size([curve]))
-print("simplified number of points:", size(new_curves))
-print("simplified curve:")
-for p in new_curves[0]:
-    print(p)
-
-def plot_curves(curves, title="curves"):
-    plt.figure(figsize=(6, 6))
-
-    for curve in curves:
-        P = np.array(curve)
-        plt.plot(P[:, 0], P[:, 1], marker="o")
-
-    plt.axis("equal")
-    plt.title(title)
-    plt.show()
-
-plot_curves([curve], "Original curve")
-plot_curves(new_curves, "RDP simplified curve")
-
-for eps in [0.01, 0.05, 0.2, 0.8]:
-    new_curves = rdp_simplify_curves([curve], epsilon=eps)
-
-    print("epsilon =", eps)
-    print("original size:", size([curve]))
-    print("simplified size:", size(new_curves))
-
-    plot_curves(new_curves, f"RDP epsilon={eps}")
 
 # =================================== QES =================================== #
 
@@ -208,7 +170,8 @@ def optimal_collapse_location(Q1: np.ndarray, Q2: np.ndarray, v1: np.ndarray, v2
 
 	Warning: Matrix multiplication between NumPy matrices is done via the `@` symbol!
 	'''
-	return np.array([0., 0.]) # TODO
+	
+	return np.array([0., 0.]) 
 
 def quadric_error_simplify_curves(curves: list[list[np.ndarray]], target_vertices: int) -> list[list[np.ndarray]]:
 	'''
