@@ -1,4 +1,5 @@
 import numpy as np, gpytoolbox as gpy
+import polyscope as ps
 
 def my_upsample(V,F,k):
     """This function performs k iterations of upsampling on the mesh V,F
@@ -32,3 +33,10 @@ def up_sampling(V,F):
         new_faces.append([v3, find_midpoint(v3, v1), v2])
 
     return np.array(new_vertices), np.array(new_faces)
+
+
+V,F = gpy.read_mesh('/Users/huyufan/Documents/GitHub/sgi-introduction-course/011_subdivision/data/mug.obj')
+Vu, Fu = my_upsample(V, F, 4)
+ps.init()
+ps_mug = ps.register_surface_mesh("upsampled mug", Vu, Fu, smooth_shade=True)
+ps.show()
