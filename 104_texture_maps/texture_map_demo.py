@@ -7,7 +7,7 @@ from PIL import Image
 ps.init()
 
 # Load in the mesh
-mesh = Mesh("data/spot.obj")
+mesh = Mesh("/Users/huyufan/Documents/GitHub/sgi-introduction-course/104_texture_maps/data/spot.obj")
 ps_mesh = ps.register_surface_mesh(
     "mesh",
     mesh.vertices,
@@ -20,14 +20,16 @@ ps_mesh = ps.register_surface_mesh(
 ps_mesh.add_parameterization_quantity("param", mesh.uv, defined_on='corners')
 
 # Add the texture map
-texture_map = Image.open("data/spot_texture.png")
+texture_map = Image.open(
+    "/Users/huyufan/Documents/GitHub/sgi-introduction-course/104_texture_maps/data/spot_texture.png"
+)
 
 # Normalize the texture map values to be between 0 and 1
-texture_map = np.asarray(texture_map) / 255
+texture_map = np.asarray(texture_map, dtype=np.float32) / 255.0
 
 # Register the texture map with Polyscope and associate it with the
 # parameterization we defined above
-ps_mesh.add_color_quantity("spot_texture", texture_map, 
+ps_mesh.add_color_quantity("spot texture", texture_map, 
                            defined_on='texture', param_name="param", 
                            enabled=True)
 

@@ -9,17 +9,18 @@ if __name__ == "__main__":
     ps.init()
 
     # Load in the mesh and texture map
-    mesh = Mesh("data/cube.obj", torch=True)
-    texture_map = Image.open("data/uv_grid.png")
+    mesh = Mesh("104_texture_maps/data/cube.obj", torch=True)
+    texture_map = Image.open("104_texture_maps/data/uv_grid.png")
     # normalize the texture map values to be between 0 and 1
     texture_map = np.asarray(texture_map)[:, :, :3] / 255
+
     
     # Compute the parameterization of the mesh
     vt, ft = triangle_soup_parameterization(mesh)
 
     # Visualize the parameterization in 2D (useful for debugging)
     plot_uvs(
-        "exercise/soup_param.png",
+        "/Users/huyufan/Documents/GitHub/sgi-introduction-course/104_texture_maps/data/uv_grid.png",
         vt,
         ft,
         texture_map,
