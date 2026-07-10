@@ -20,7 +20,45 @@ def compute_total_curvature(V, F):
     normA = np.linalg.norm(vecA, axis=-1) # [F,3]
     normB = np.linalg.norm(vecB, axis=-1) # [F,3]
     dot_prod = np.sum(vecA * vecB, axis=-1) # [F,3]
-    corner_angles = np.arccos(dot_prod / (normA * normB)) # [F,3] tensor of corner angles in radians for each triangle
+
+    cos_angles = dot_prod / (normA * normB)
+
+    print("NaNs in V:", np.isnan(V).sum())
+    print("NaNs in corner_pos:", np.isnan(corner_pos).sum())
+    print("NaNs in vecA:", np.isnan(vecA).sum())
+    print("NaNs in vecB:", np.isnan(vecB).sum())
+    print("NaNs in normA:", np.isnan(normA).sum())
+    print("NaNs in normB:", np.isnan(normB).sum())
+    print("NaNs in dot product:", np.isnan(dot_prod).sum())
+    print("NaNs in cosine:", np.isnan(cos_angles).sum())
+
+    denominator = normA * normB
+    cos_angles = dot_prod / denominator
+
+    bad_divide = ~np.isfinite(cos_angles)
+
+    print("bad divide locations:", np.argwhere(bad_divide))
+    print("normA:", normA[bad_divide])
+    print("normB:", normB[bad_divide])
+    print("denominator:", denominator[bad_divide])
+    print("dot product:", dot_prod[bad_divide])
+
+    finite_cos = np.isfinite(cos_angles)
+
+    print(
+        "finite cosine below -1:",
+        cos_angles[finite_cos & (cos_angles < -1)]
+    )
+    print(
+        "finite cosine above 1:",
+        cos_angles[finite_cos & (cos_angles > 1)]
+    )
+
+    cross_norm = np.linalg.norm(np.cross(vecA, vecB), axis=-1)
+    corner_angles = np.arctan2(cross_norm, dot_prod) # [F,3] tensor of corner angles in radians for each triangle
+
+
+    print("NaN angles:", np.isnan(corner_angles).sum())
 
     # compute the total curvature
     num_verts = V.shape[0]
@@ -61,3 +99,26 @@ process_mesh(os.path.join(DATA_DIR, "spot_good.obj"))
 process_mesh(os.path.join(DATA_DIR, "torus_good.obj"))
 process_mesh(os.path.join(DATA_DIR, "triple_torus_good.obj"))
 process_mesh(os.path.join(DATA_DIR, "sphere_bad.obj"))
+
+import polyscope as ps
+
+V, F = gpy.read_mesh(os.path.join(DATA_DIR, "sphere_bad.obj"))
+
+ps.init()
+ps.register_surface_mesh("sphere_bad", V, F)
+ps.show()
+
+bad_face_ids = [135, 136]
+bad_vertex_ids = np.unique(F[bad_face_ids])
+
+ps.init()
+ps.register_surface_mesh("mesh", V, F)
+
+ps.register_point_cloud(
+    "degenerate-face vertices",
+    V[bad_vertex_ids],
+    radius=0.01,
+    color=(1.0, 0.0, 0.0)
+)
+
+ps.show()
